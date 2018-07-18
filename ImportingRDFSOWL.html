@@ -1,1 +1,238 @@
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112348287-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-112348287-1');
+</script>
+  <meta charset="UTF-8">
+  <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Asciidoctor 1.5.4">
+  <title>Importing RDFS/OWL ontologies into Neo4j</title>
+  <link rel="stylesheet" href="https://asciidoclive.com/assets/asciidoctor.js/css/asciidoctor.css">
+</head>
+
+<body class="article">
+  <div id="header">
+    <h1>Importing RDFS/OWL ontologies into Neo4j</h1>
+  </div>
+  <div id="content">
+    <div id="preamble">
+      <div class="sectionbody">
+        <div class="paragraph">
+          <p>As RDFS and OWL are becoming increasingly popular to create and describe
+            ontologies and models, it is becoming frequently more asked how would
+            one import such an ontology into Neo4j.</p>
+        </div>
+        <div class="paragraph">
+          <p>To demonstrate how an RDFS/OWL ontology can be imported into Neo4j, we
+            are going to show how we import the W3C Organizational Ontology using
+            the neosematics tools. There will be other approaches to achieve this,
+            of course, but this is a good starting point to explore.</p>
+        </div>
+      </div>
+    </div>
+    <div class="sect1">
+      <h2 id="_what_is_neosemantics">What is neosemantics?</h2>
+      <div class="sectionbody">
+        <div class="paragraph">
+          <p>Before we dive straight into our worked example, what exactly is neosematics?
+            Neosemantics (<a href="https://github.com/jbarrasa/neosemantics" class="bare">https://github.com/jbarrasa/neosemantics</a>)
+            is a Neo4j plugin written by Jesus Barassa to efficiently work with previewing
+            and ingesting RDF/semantic data.</p>
+        </div>
+        <div class="paragraph">
+          <p>Accompanying this plugin, Jesus has written a series of blogs describing
+            the different ways one can import not only data, but RDFS/OWL models
+            too. An excellent starting point to get more in-depth information on
+            this would be the following post: <a href="https://jbarrasa.com/2016/04/06/building-a-semantic-graph-in-neo4j/"
+              class="bare">https://jbarrasa.com/2016/04/06/building-a-semantic-graph-in-neo4j/</a>.</p>
+        </div>
+      </div>
+    </div>
+    <div class="sect1">
+      <h2 id="_getting_started_w3c_organizational_ontology">Getting started – W3C Organizational Ontology</h2>
+      <div class="sectionbody">
+        <div class="paragraph">
+          <p>For reference, the ontology we are looking to import is the one below (available
+            from: <a href="https://www.w3.org/TR/vocab-org/" class="bare">https://www.w3.org/TR/vocab-org/</a>).</p>
+        </div>
+        <div class="imageblock">
+          <div class="content">
+            <img src="https://raw.githubusercontent.com/lju-lazarevic/lju-lazarevic.github.io/master/pic0.png"
+              alt="pic0" width="100%">
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>We are going to use the Turtle serialization of this model (<a href="https://www.w3.org/ns/org.ttl"
+              class="bare">https://www.w3.org/ns/org.ttl</a>) and use neosemantics
+            (<a href="https://github.com/jbarrasa/neosemantics" class="bare">https://github.com/jbarrasa/neosemantics</a>)
+            to ingest it. To do this, we’ll run the following Cypher query in the
+            Browser:</p>
+        </div>
+        <div class="listingblock">
+          <div class="content">
+            <pre class="highlight"><code class="language-cypher" data-lang="cypher">CALL semantics.importRDF(“https://www.w3.org/ns/org.ttl",”Turtle”,{ languageFilter: ‘en’ })</code></pre>
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>A limitation with neosematics to be aware of is during import the process
+            does not support multivalued properties. Multivalued properties are most
+            commonly used with different languages, so by using the <em>languageFilter</em>            parameter as above, we will ensure we import the language type we want
+            in our model. Occasionally there will be multivalued properties that
+            are not language-based. In this scenario, the last of the multivalue
+            properties imported will be the one available in the resulting model.</p>
+        </div>
+        <div class="paragraph">
+          <p>Once we’ve imported the Organization ontology, we can have a look at it
+            running the following Cypher query:</p>
+        </div>
+        <div class="listingblock">
+          <div class="content">
+            <pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (n) RETURN *</code></pre>
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>Which will return the following (nodes coloured already):</p>
+        </div>
+        <div class="imageblock">
+          <div class="content">
+            <img src="https://raw.githubusercontent.com/lju-lazarevic/lju-lazarevic.github.io/master/pic2.png"
+              alt="pic2" width="100%">
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>As we can see there’s a lot of interconnected relationships going on. A
+            brief exploration of the model shows a lot of relationships linking to
+            ‘org’. We can show these relationships, along with which nodes being
+            joined by running the following Cypher query:</p>
+        </div>
+        <div class="listingblock">
+          <div class="content">
+            <pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (n:Resource {uri:’http://www.w3.org/ns/org'})-[r]-()
+WITH type(r) AS rel, startnode(r) AS sn
+RETURN rel, sn.uri ORDER BY sn</code></pre>
+          </div>
+        </div>
+        <div class="imageblock">
+          <div class="content">
+            <img src="https://raw.githubusercontent.com/lju-lazarevic/lju-lazarevic.github.io/master/pic5.png"
+              alt="pic5" width="100%">
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>This ‘isDefinedBy’ relationships effectively links every single resource
+            to this specific definition, so we can safely ignore this. There are
+            a couple of way we can go about doing this; we could delete the node
+            and relationships. However the approach we’re going to take instead is
+            to remove the Resource label from this node, so we’re still keeping all
+            of the information, but we can now easily bring back the rest of the
+            model. We;ll use the following two Cypher queries to do this:</p>
+        </div>
+        <div class="listingblock">
+          <div class="content">
+            <pre class="highlight"><code class="language-cypher" data-lang="cypher">//Remove the Resource label
+MATCH (n:Resource {uri:’http://www.w3.org/ns/org'})
+REMOVE n:Resource</code></pre>
+          </div>
+        </div>
+        <div class="listingblock">
+          <div class="content">
+            <pre class="highlight"><code class="language-cypher" data-lang="cypher">//Return only the nodes with Resource labels and associated relationships
+MATCH (n:Resource) RETURN *</code></pre>
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>With a bit of node dragging to move the classes in roughly the same locations
+            as the above diagram, we get the following:</p>
+        </div>
+        <div class="imageblock">
+          <div class="content">
+            <img src="https://raw.githubusercontent.com/lju-lazarevic/lju-lazarevic.github.io/master/pic1.png"
+              alt="pic1" width="100%">
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>And there is the imported RDFS/OWL ontology with no loss of data. We can
+            take this diagram and re-serialize it back to an RDF format.</p>
+        </div>
+        <div class="paragraph">
+          <p>Some comments about the imported Organizational ontology. As will be clear
+            quite quickly, what we’d consider to be relationships and properties
+            in Neo4j (edges, data type properties) are all represented as nodes,
+            along with relationships between these nodes to indicate range, domain
+            and so forth. This is the case as there are certain relationship types
+            and definitions in RDF that Neo4j doesn’t provide for out of the box.
+            This is not a problem, but just requires the user to have understanding
+            of these patterns within Neo4j. For example, take the RDF concept of
+            showing that two relationship types are inverses of each other:</p>
+        </div>
+        <div class="paragraph">
+          <p><span class="image"><img src="https://raw.githubusercontent.com/lju-lazarevic/lju-lazarevic.github.io/master/pic4.png" alt="pic4" width="50%"></span>
+            <span
+              class="image"><img src="https://raw.githubusercontent.com/lju-lazarevic/lju-lazarevic.github.io/master/pic3.png"
+                alt="pic3" width="50%"></span>
+          </p>
+        </div>
+        <div class="paragraph">
+          <p>The left image demonstrates what this diagrammatically looks like in an
+            RDF ontology. This same concept has been replicated in Neo4j on the right,
+            preserving all of the information integrity.</p>
+        </div>
+      </div>
+    </div>
+    <div class="sect1">
+      <h2 id="_tailoring_views">Tailoring views</h2>
+      <div class="sectionbody">
+        <div class="paragraph">
+          <p>Of course, we may well want to make what we bring back to view via query
+            look more similar like what we have modelling in our graphical interface,
+            and worry less about the relationship consistency constraints. This can
+            be achieved in an number of ways; one approach being through the use
+            of APOC’s virtual relationships function (<a href="https://neo4j-contrib.github.io/neo4j-apoc-procedures/#_virtual"
+              class="bare">https://neo4j-contrib.github.io/neo4j-apoc-procedures/#_virtual</a>).
+            For example, a starter for 10 may look like this:</p>
+        </div>
+        <div class="listingblock">
+          <div class="content">
+            <pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (n:ns0__Class)-[:ns1__range]-(r)-[:ns1__domain]-(m:ns0__Class)
+WITH n, r.ns1__label as lab, m, count(*) as count
+CALL apoc.create.vRelationship(n, lab, {count:count}, m) YIELD rel
+RETURN n, m, rel</code></pre>
+          </div>
+        </div>
+        <div class="imageblock">
+          <div class="content">
+            <img src="https://raw.githubusercontent.com/lju-lazarevic/lju-lazarevic.github.io/master/pic6.png"
+              alt="pic6" width="100%">
+          </div>
+        </div>
+        <div class="paragraph">
+          <p>This is a virtual view, and does not in any way change or affect the data
+            underneath.</p>
+        </div>
+      </div>
+    </div>
+    <div class="sect1">
+      <h2 id="_summary">Summary</h2>
+      <div class="sectionbody">
+        <div class="paragraph">
+          <p>We have demonstrated an approach of how you can import your RDFS/OWL-based
+            ontology into Neo4j, preserving the detail, and how to make user-friendly
+            views for exploration. For further information on working on RDFS and
+            OWL ontologies and models in Neo4j, please do check out the excellent
+            series of posts written by Jesus Barassa (jbarrasa.com).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
