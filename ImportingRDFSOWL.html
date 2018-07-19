@@ -28,7 +28,7 @@
     <div id="preamble">
       <div class="sectionbody">
         <div class="paragraph">
-          <p>As RDFS and OWL are becoming increasingly popular to create and describe
+          <p>As RDFS and OWL are becoming increasingly popular for larger audiences to create and describe
             ontologies and models, it is becoming frequently more asked how would
             one import such an ontology into Neo4j.</p>
         </div>
@@ -47,7 +47,7 @@
           <p>Before we dive straight into our worked example, what exactly is neosematics?
             Neosemantics (<a href="https://github.com/jbarrasa/neosemantics" class="bare">https://github.com/jbarrasa/neosemantics</a>)
             is a Neo4j plugin written by Jesus Barassa to efficiently work with previewing
-            and ingesting RDF/semantic data.</p>
+            and ingesting RDF/semantic data, as well as publishing Label Property Graph data as RDF.</p>
         </div>
         <div class="paragraph">
           <p>Accompanying this plugin, Jesus has written a series of blogs describing
@@ -84,12 +84,10 @@
           </div>
         </div>
         <div class="paragraph">
-          <p>A limitation with neosematics to be aware of is during import the process
-            does not support multivalued properties. Multivalued properties are most
-            commonly used with different languages, so by using the <em>languageFilter</em>            parameter as above, we will ensure we import the language type we want
-            in our model. Occasionally there will be multivalued properties that
-            are not language-based. In this scenario, the last of the multivalue
-            properties imported will be the one available in the resulting model.</p>
+          <p>A limitation with neosematics to be aware of is how neosemantics handles multivalued properties during import the process. In this scenario, the last of the multivalue
+            properties imported will be the one available in the resulting model. Multivalued properties are most
+            commonly used with different languages, so by using the <em>languageFilter</em> parameter as above, we will ensure we import the language type we want
+            in our model. Occasionally there will be multivalued properties that are not language-based. A LPG will happy accomodate multivalue properties via arrays. Having said that, multivalued properties outside of languages are very rarely used. </p>
         </div>
         <div class="paragraph">
           <p>Once we’ve imported the Organization ontology, we can have a look at it
@@ -111,7 +109,7 @@
         </div>
         <div class="paragraph">
           <p>As we can see there’s a lot of interconnected relationships going on. A
-            brief exploration of the model shows a lot of relationships linking to
+            brief exploration of the model shows a lot of elements linking to
             ‘org’. We can show these relationships, along with which nodes being
             joined by running the following Cypher query:</p>
         </div>
@@ -130,7 +128,7 @@ RETURN rel, sn.uri ORDER BY sn</code></pre>
         </div>
         <div class="paragraph">
           <p>This ‘isDefinedBy’ relationships effectively links every single resource
-            to this specific definition, so we can safely ignore this. There are
+            to this specific definition, so we can safely ignore this. These types of statements are sometimes used to indicate an RDF vocabulary in which a resource is described (<a href src="https://www.w3.org/TR/rdf-schema/#ch_isdefinedby">https://www.w3.org/TR/rdf-schema/#ch_isdefinedby</a>). There are
             a couple of way we can go about doing this; we could delete the node
             and relationships. However the approach we’re going to take instead is
             to remove the Resource label from this node, so we’re still keeping all
@@ -181,8 +179,8 @@ MATCH (n:Resource) RETURN *</code></pre>
           </div>
         </div>
         <div class="paragraph">
-          <p>The left image demonstrates what this diagrammatically looks like in an
-            RDF ontology. This same concept has been replicated in Neo4j on the right,
+          <p>The left image illustrates a user-friendly view of what this diagrammatically looks like in an
+            RDF ontology. This same concept has been replicated in Neo4j on the right as an RDF formalisation of this view,
             preserving all of the information integrity.</p>
         </div>
       </div>
