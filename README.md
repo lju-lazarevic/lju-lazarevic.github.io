@@ -9,7 +9,7 @@ I can also be found [on Twitter](https://twitter.com/ellazal), and [on LinkedIn]
 - [Webinars and meetups](#webinars-and-meetups)
 - [Training courses](#training-courses)
 - [Other stuff](#other-stuff)
-- [Chess!](#chess!)
+- [Chess!](#chess)
 
 ### Blogs
 
