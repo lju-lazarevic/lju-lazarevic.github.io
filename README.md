@@ -1,4 +1,19 @@
-## Welcome to GitHub Pages
+## Welcome visitor!
+
+This page provides an aggregation of blogs, talks and training courses I have put together over the past. I hope you find some of the content useful!
+
+I can also be found [on Twitter](https://twitter.com/ellazal), and [on LinkedIn](https://www.linkedin.com/in/ljubicalazarevic/).
+
+- [Blogs](#blogs)
+- Conference talks
+- Webinars and meetups
+- Training courses
+- Chess!
+
+
+
+### Blogs
+Test-test
 
 You can use the [editor on GitHub](https://github.com/lju-lazarevic/lju-lazarevic.github.io/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
 
