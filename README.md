@@ -33,6 +33,7 @@ Here are links to recodings of some of the conferences I have spoken to over the
 - [Getting the most out of your APIs with API Management - Microsoft JDConf](https://docs.microsoft.com/en-us/events/jdconf-2022/getting-the-most-out-of-your-apis-with-api-management)
 - [Bloom tips and tricks for domain knowledge experts - Graph Connect](https://www.youtube.com/watch?v=tX2OiKcIOok)
 - [Why streaming and API Management go hand in hand - APIdays Helsinki](https://www.youtube.com/watch?v=U0FagjU7zsI)
+- [How to keep track of change - versioning approaches in Neo4j - NODES](https://www.youtube.com/watch?v=Cm1yd8d7qv0)
 
 ### Webinars and meetups
 
