@@ -18,6 +18,7 @@ The majority of my blog posts can be found in the following places:
 - [On Medium](https://lju.medium.com) (including for FreeCodeCamp and Geek Culture)
 - [FreeCodeCamp](https://www.freecodecamp.org/news/author/lju/)
 - [DevTo](https://dev.to/lju)
+- <a href="https://google.com" target="_blank">test</a>
 
 ### Conference talks
 
